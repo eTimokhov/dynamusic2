@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+
+<dynamo-message-system>
+
+    <patchbay>
+
+        <!-- new message source for Dev1 - the ViewItemEventSender component
+             send a message indicating an item in a repository has been sent -->
+
+        <message-source>
+            <nucleus-name>
+                /dynamusic/ViewItemEventSender
+            </nucleus-name>
+
+            <output-port>
+
+                <output-destination>
+                    <provider-name>
+                        local
+                    </provider-name>
+                    <destination-name>
+                        localdms:/local/DPSTopic/ViewItemEvents
+                    </destination-name>
+                    <destination-type>
+                        Topic
+                    </destination-type>
+                </output-destination>
+            </output-port>
+        </message-source>
+
+    </patchbay>
+
+</dynamo-message-system>
