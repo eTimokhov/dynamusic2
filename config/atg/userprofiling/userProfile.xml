@@ -88,6 +88,16 @@
                       default="false"/>
         </table>
 
+        <property name="ageInYears" property-type="dynamusic.FindAge" data-type="int" default="0" writable="false"
+                  category="dynamusic">
+            <attribute name="ageFormat" value="years" data-type="string"/>
+        </property>
+
+        <property name="ageInDays" property-type="dynamusic.FindAge" data-type="int" default="0" writable="false"
+                  category="dynamusic">
+            <attribute name="ageFormat" value="days" data-type="string"/>
+        </property>
+
     </item-descriptor>
 
 </gsa-template>
