@@ -25,6 +25,7 @@ public class FindAge extends RepositoryPropertyDescriptor {
     @Override
     public Object getPropertyValue(RepositoryItemImpl pItem, Object pValue) {
         Date dateOfBirth = (Date) pItem.getPropertyValue("dateOfBirth");
+        if (dateOfBirth == null) return null; //ACC Error fix
         if (ageFormat.equals("days")) {
             return AgeCalc.ageInDays(dateOfBirth);
         }

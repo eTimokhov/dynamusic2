@@ -1,4 +1,6 @@
 <%@ taglib uri="/dspTaglib" prefix="dsp" %>
+<dsp:importbean bean="/atg/userdirectory/droplet/HasFunction"/>
+<dsp:importbean bean="/atg/userprofiling/Profile"/>
 <dsp:page>
     <!-------------------------------------------------------------
     Dynamusic Site Mockup
@@ -22,10 +24,14 @@
         <tr>
             <!-- Sidebar -->
             <td width="100" bgcolor="ghostwhite" valign="top">
-                <dsp:include page="common/sidebar.jsp">
-                </dsp:include>
-                <hr>
-                <a href="newVenue.jsp">Add Venue</a>
+                <dsp:include page="common/sidebar.jsp"/>
+                <dsp:droplet name="HasFunction">
+                    <dsp:param name="userId" bean="Profile.id"/>
+                    <dsp:param name="function" value="admin"/>
+                    <dsp:oparam name="true">
+                        <hr><a href="newVenue.jsp">Add Venue</a>
+                    </dsp:oparam>
+                </dsp:droplet>
             </td>
             <!-- Page Body -->
             <td valign="top">

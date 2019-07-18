@@ -4,3 +4,4 @@ ATG-Required: DAS DPS DSS DAS
 ATG-J2EE: j2ee-apps/dynamusic2-j2ee
 ATG-EAR-Module: j2ee-apps/dynamusic2-j2ee
 ATG-Class-Path: classes/
+ATG-Client-Class-Path: classes/
