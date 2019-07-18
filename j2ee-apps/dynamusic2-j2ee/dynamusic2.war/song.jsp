@@ -1,7 +1,8 @@
 <%@ taglib uri="/dspTaglib" prefix="dsp" %>
+<dsp:importbean bean="/atg/userprofiling/Profile"/>
+<dsp:importbean bean="/dynamusic/PlaylistFormHandler"/>
+<dsp:importbean bean="/atg/dynamo/droplet/Switch"/>
 <dsp:page>
-    <dsp:importbean bean="/atg/userprofiling/Profile"/>
-    <dsp:importbean bean="/dynamusic/PlaylistFormHandler"/>
 
     <%-- Required input param: itemId (id of the song to display --%>
 
@@ -62,6 +63,19 @@
                                             </dsp:a> </b></font>
                                     </td>
                                 </tr>
+                                <dsp:droplet name="Switch">
+                                    <dsp:param name="value" param="element.type"/>
+                                    <dsp:oparam name="classical">
+                                        <tr>
+                                            <td valign="top" align="right"> Performer:</td>
+                                            <td valign="top">
+                                                <font face="Courier New"><b>
+                                                    <dsp:valueof param="element.performer"/>
+                                                </b></font>
+                                            </td>
+                                        </tr>
+                                    </dsp:oparam>
+                                </dsp:droplet>
                                 <tr>
                                     <td valign="top" align="right"> Genre:</td>
                                     <td valign="top">
