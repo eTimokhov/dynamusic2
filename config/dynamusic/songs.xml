@@ -75,6 +75,14 @@
             <property name="description" column-name="description" data-type="string"/>
             <property name="date" column-name="published" data-type="timestamp"/>
             <property name="artist" column-name="artist" item-type="artist"/>
+            <property name="albumGenre" column-name="genre" data-type="enumerated">
+                <attribute name="useCodeForValue" value="false"/>
+                <option value="jazz"/>
+                <option value="country"/>
+                <option value="pop"/>
+                <option value="blues"/>
+                <option value="classical"/>
+            </property>
         </table>
         <table name="dynamusic_album_songs" type="multi"
                id-column-name="album_id">
@@ -86,7 +94,11 @@
         <table name="dynamusic_artist_album" type="multi" id-column-name="album_id">
             <property name="artists" data-type="set" component-item-type="artist" column-name="artist_id"/>
         </table>
-
+        <property name="genre" data-type="string">
+            <derivation override-property="albumGenre">
+                <expression>artist.artistGenre</expression>
+            </derivation>
+        </property>
     </item-descriptor>
 
 
