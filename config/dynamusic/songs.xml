@@ -12,7 +12,7 @@
         </description>
     </header>
 
-    <item-descriptor name="song" display-property="title" sub-type-property="type">
+    <item-descriptor name="song" display-property="title" sub-type-property="type" query-cache-size="100">
         <table name="dynamusic_song"
                type="primary"
                id-column-name="id">
@@ -37,13 +37,13 @@
         </table>
     </item-descriptor>
 
-    <item-descriptor name="classical-song" super-type="song" sub-type-value="classical">
+    <item-descriptor name="classical-song" super-type="song" sub-type-value="classical" query-cache-size="100">
         <table name="dynamusic_classical_song" type="auxiliary" id-column-name="song_id">
             <property name="performer" column-name="performer" data-type="string"/>
         </table>
     </item-descriptor>
 
-    <item-descriptor name="artist" display-property="name">
+    <item-descriptor name="artist" display-property="name" query-cache-size="100">
         <table name="dynamusic_artist"
                type="primary"
                id-column-name="id">
@@ -65,7 +65,7 @@
         </table>
     </item-descriptor>
 
-    <item-descriptor name="album" display-property="title">
+    <item-descriptor name="album" display-property="title" query-cache-size="100">
         <table name="dynamusic_album"
                type="primary"
                id-column-name="id">
@@ -100,6 +100,8 @@
             </derivation>
         </property>
     </item-descriptor>
-
+    <query-items item-descriptor="song" quiet="true">ALL</query-items>
+    <query-items item-descriptor="album" quiet="true">ALL</query-items>
+    <query-items item-descriptor="artist">ALL</query-items>
 
 </gsa-template>
