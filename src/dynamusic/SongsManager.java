@@ -1,23 +1,3 @@
-/*<ATGCOPYRIGHT>
- * Copyright (C) 1997-2003 Art Technology Group, Inc.
- * All Rights Reserved.  No use, copying or distribution ofthis
- * work may be made except in accordance with a valid license
- * agreement from Art Technology Group.  This notice must be
- * included on all copies, modifications and derivatives of this
- * work.
- *
- * Art Technology Group (ATG) MAKES NO REPRESENTATIONS OR WARRANTIES
- * ABOUT THE SUITABILITY OF THE SOFTWARE, EITHER EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. ATG SHALL NOT BE
- * LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS A RESULT OF USING,
- * MODIFYING OR DISTRIBUTING THIS SOFTWARE OR ITS DERIVATIVES.
- *
- * "Dynamo" is a trademark of Art Technology Group, Inc.
- </ATGCOPYRIGHT>*/
-
-package dynamusic;
-
 /* -------------------------------------------
  * SongsManager
  *
@@ -29,13 +9,14 @@ package dynamusic;
  * Last modified: June 12, 2003
  *--------------------------------------------
  */
+package dynamusic;
 
 import atg.repository.Repository;
 import atg.repository.MutableRepository;
-import atg.repository.RepositoryException;
+import atg.repository.MutableRepositoryItem;
 import atg.repository.RepositoryView;
 import atg.repository.RepositoryItem;
-import atg.repository.MutableRepositoryItem;
+import atg.repository.RepositoryException;
 
 import atg.repository.rql.RqlStatement;
 
@@ -47,7 +28,6 @@ import atg.dtm.TransactionDemarcationException;
 
 import java.util.Collection;
 
-
 public class SongsManager extends atg.nucleus.GenericService {
 
     // ----------------------------------------
@@ -56,7 +36,7 @@ public class SongsManager extends atg.nucleus.GenericService {
     private TransactionManager mTransactionManager = null;
     private Repository mRepository = null;
     private Repository mUserRepository = null;
-
+    private SongMessageSource mSongMessageSource = null;
 
     // ----------------------------------------
     // [2] PROPERTIES
@@ -115,6 +95,23 @@ public class SongsManager extends atg.nucleus.GenericService {
         return mUserRepository;
     }
 
+    // -- Property: songMessageSource --
+
+    /**
+     * Sets the songMessageSource property, which points to the
+     * component to fire a NewSongMessage event.
+     **/
+    public void setSongMessageSource(SongMessageSource pSongMessageSource) {
+        mSongMessageSource = pSongMessageSource;
+    }
+
+    /**
+     * Returns the songMessageSource property, which points to the
+     * component to fire a NewSongMessage event.
+     **/
+    public SongMessageSource getSongMessageSource() {
+        return mSongMessageSource;
+    }
 
     // ----------------------------------------
     // [3] METHODS
@@ -225,7 +222,7 @@ public class SongsManager extends atg.nucleus.GenericService {
 
 
     /**
-     *
+     * Delete all the albums by the artist specified
      */
     public void deleteAlbumsByArtist(String pArtistId) throws RepositoryException {
 
@@ -278,6 +275,29 @@ public class SongsManager extends atg.nucleus.GenericService {
                 logError("creating transaction demarcation failed, no albums deleted", e);
         }
 
+    }
+
+    public void fireNewSongMessage(RepositoryItem pNewSong) {
+
+        SongMessageSource source = getSongMessageSource();
+
+        if (source != null) {
+            if (isLoggingDebug())
+                logDebug("Found message source, firing message now");
+
+            try {
+                source.fireMessage(
+                        pNewSong.getRepositoryId(),
+                        (String) pNewSong.getPropertyValue("songGenre"),
+                        (String) pNewSong.getPropertyValue("title"));
+            } catch (Exception e) {
+                if (isLoggingError())
+                    logError("unable to fire new song message", e);
+            }
+        } else {
+            if (isLoggingDebug())
+                logDebug("No SongMessageSource set, no message sent");
+        }
     }
 
     /**

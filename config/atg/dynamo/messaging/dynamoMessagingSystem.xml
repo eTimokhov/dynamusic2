@@ -4,8 +4,32 @@
 
     <patchbay>
 
-        <!-- new message source for Dev1 - the ViewItemEventSender component
-             send a message indicating an item in a repository has been sent -->
+        <!-- New message source for Dev2 - the SongMessageSource component
+             sends a message when a new song is added to the Songs Repository -->
+
+        <message-source>
+            <nucleus-name>
+                /dynamusic/SongMessageSource
+            </nucleus-name>
+
+            <output-port>
+
+
+                <output-destination>
+
+                    <destination-name>
+                        patchbay:/sqldms/DSSQueue/NewSongMessageDestination
+                    </destination-name>
+                    <destination-type>
+                        Queue
+                    </destination-type>
+                </output-destination>
+            </output-port>
+        </message-source>
+
+
+        <!-- message source for Dev1 - the ViewItemEventSender component
+             send a message indicating an item in a repository has been viewed -->
 
         <message-source>
             <nucleus-name>
@@ -13,6 +37,9 @@
             </nucleus-name>
 
             <output-port>
+                <port-name>
+                    DEFAULT
+                </port-name>
 
                 <output-destination>
                     <provider-name>
@@ -29,5 +56,18 @@
         </message-source>
 
     </patchbay>
+
+    <!-- Dev2 - registers the NewSongMessage as a known message type -->
+    <message-registry>
+        <message-family>
+            <message-family-name>mycorp</message-family-name>
+            <message-type>
+                <jms-type>NewSongMessage</jms-type>
+                <message-class>dynamusic.NewSongMessage</message-class>
+                <display-name>New Song Message</display-name>
+                <description>event for new song added</description>
+            </message-type>
+        </message-family>
+    </message-registry>
 
 </dynamo-message-system>

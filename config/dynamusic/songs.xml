@@ -102,6 +102,6 @@
     </item-descriptor>
     <query-items item-descriptor="song" quiet="true">ALL</query-items>
     <query-items item-descriptor="album" quiet="true">ALL</query-items>
-    <query-items item-descriptor="artist">ALL</query-items>
+    <query-items item-descriptor="artist" quiet="true">ALL</query-items>
 
 </gsa-template>

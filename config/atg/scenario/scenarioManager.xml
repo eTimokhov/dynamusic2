@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE process-manager-configuration
+        PUBLIC "-//Art Technology Group, Inc.//DTD Scenario Manager//EN"
+        'http://www.atg.com/dtds/processmanager/processmanager_1.0.dtd'>
+
+<process-manager-configuration>
+
+    <event-registry>
+        <event>
+            <jms-type>NewSongMessage</jms-type>
+            <message-class>dynamusic.NewSongMessage</message-class>
+            <message-scope>global</message-scope>
+            <display-name>New Song Added</display-name>
+            <description>This event is fired by the SongManager when
+                a new song is added to the SongsRepository. It includes
+                songId, songGenre, and title as properties
+            </description>
+        </event>
+    </event-registry>
+
+</process-manager-configuration>

@@ -59,6 +59,7 @@ public class SongFormHandler extends RepositoryFormHandler {
         mArtistId = pArtistId;
     }
 
+
     protected void postCreateItem(DynamoHttpServletRequest pRequest,
                                   DynamoHttpServletResponse pResponse)
             throws javax.servlet.ServletException,
@@ -73,6 +74,7 @@ public class SongFormHandler extends RepositoryFormHandler {
         try {
             sm.addSongToAlbum(getRepositoryId(), getAlbumId());
             sm.addArtistToSong(getRepositoryId(), getArtistId());
+            sm.fireNewSongMessage(getRepositoryItem());
         } catch (RepositoryException e) {
             if (isLoggingError())
                 logError("Cannot add song to album", e);
