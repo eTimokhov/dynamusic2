@@ -25,6 +25,12 @@
             <action-class>dynamusic.NewItemAddToProfile</action-class>
             <action-execution-policy>individual</action-execution-policy>
             <action-error-response>continue</action-error-response>
+            <action-parameter>
+                <action-parameter-name>newSongsPlaylistLimit</action-parameter-name>
+                <display-name>New Songs Playlist Limit</display-name>
+                <action-parameter-class>java.lang.Integer</action-parameter-class>
+                <required>false</required>
+            </action-parameter>
         </action>
     </action-registry>
 

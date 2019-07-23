@@ -7,6 +7,7 @@ import atg.process.action.ActionImpl;
 import atg.repository.Repository;
 
 import java.util.Collection;
+import java.util.Map;
 
 // DAS classes
 import atg.beans.DynamicBeans;
@@ -18,8 +19,15 @@ import atg.repository.RepositoryItem;
  */
 public class NewItemAddToProfile extends ActionImpl {
 
+    @Override
+    public void initialize(Map pParameters) throws ProcessException {
+        storeOptionalParameter(pParameters, "newSongsPlaylistLimit", Integer.class);
+    }
 
     public void executeAction(ProcessExecutionContext pContext) throws ProcessException {
+        Object newSongsPlaylistLimitObject = getParameterValue("newSongsPlaylistLimit", pContext);
+        if (newSongsPlaylistLimitObject == null) return; //ATG Start Exception fix
+        int newSongsPlaylistLimit = (Integer) newSongsPlaylistLimitObject;
 
         //1: get a handle to the profile (note this is to be used for a global event,
         //		but with an *individual* action execution policy)
@@ -55,7 +63,9 @@ public class NewItemAddToProfile extends ActionImpl {
 
             // B) load the new item to the collection
             try {
-                theItems.add(theItem);
+                if (theItems.size() < newSongsPlaylistLimit) {
+                    theItems.add(theItem);
+                }
                 System.out.println("theItems is now: " + theItems);
                 DynamicBeans.setPropertyValue(nSP, "songs", theItems);
             } catch (Exception e) {
