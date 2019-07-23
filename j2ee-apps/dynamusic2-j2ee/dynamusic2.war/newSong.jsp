@@ -1,6 +1,7 @@
 <%@ taglib uri="/dspTaglib" prefix="dsp" %>
+<dsp:importbean bean="/dynamusic/SongFormHandler"/>
+<dsp:importbean bean="/dynamusic/EnumForEach"/>
 <dsp:page>
-    <dsp:importbean bean="/dynamusic/SongFormHandler"/>
 
     <% /* input parameters: albumId (required) */ %>
 
@@ -130,11 +131,19 @@
                             <td>
                                 <font face="Verdana,Geneva,Arial" size="-1">
                                     <dsp:select bean="SongFormHandler.value.songGenre">
-                                        <dsp:option value="jazz"/>Jazz
-                                        <dsp:option value="classical"/>Classical
-                                        <dsp:option value="country"/>Country
-                                        <dsp:option value="pop"/>Pop
-                                        <dsp:option value="blues"/>Blues
+                                        <dsp:droplet name="EnumForEach">
+                                            <dsp:param name="repositoryName" value="/dynamusic/SongsRepository"/>
+                                            <dsp:param name="itemDescriptorName" value="song"/>
+                                            <dsp:param name="propertyName" value="songGenre"/>
+                                            <dsp:oparam name="output">
+                                                <option value="<dsp:valueof param="element"/>">
+                                                    <dsp:valueof param="element"/>
+                                                </option>
+                                            </dsp:oparam>
+                                            <dsp:oparam name="error">
+                                                <p>Error occurred</p>
+                                            </dsp:oparam>
+                                        </dsp:droplet>
                                     </dsp:select>
                                 </font>
                             </td>
