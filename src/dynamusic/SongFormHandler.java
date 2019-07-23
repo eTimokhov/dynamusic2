@@ -29,6 +29,8 @@ import atg.servlet.DynamoHttpServletResponse;
 
 public class SongFormHandler extends RepositoryFormHandler {
 
+    private static final String POST_CREATE_ITEM_CALLED_ITEM_CREATED = "postCreateItem called, item created: ";
+    private static final String CANNOT_ADD_SONG_TO_ALBUM = "Cannot add song to album";
     private SongsManager mSM;
     private String mAlbumId;
     private String mArtistId;
@@ -60,26 +62,17 @@ public class SongFormHandler extends RepositoryFormHandler {
     }
 
 
-    protected void postCreateItem(DynamoHttpServletRequest pRequest,
-                                  DynamoHttpServletResponse pResponse)
-            throws javax.servlet.ServletException,
-            java.io.IOException {
-
-        if (isLoggingDebug())
-            logDebug("postCreateItem called, item created: " + getRepositoryItem());
-
+    protected void postCreateItem(DynamoHttpServletRequest pRequest, DynamoHttpServletResponse pResponse) {
+        if (isLoggingDebug()) logDebug(POST_CREATE_ITEM_CALLED_ITEM_CREATED + getRepositoryItem());
 
         SongsManager sm = getSongsManager();
-
         try {
             sm.addSongToAlbum(getRepositoryId(), getAlbumId());
             sm.addArtistToSong(getRepositoryId(), getArtistId());
             sm.fireNewSongMessage(getRepositoryItem());
         } catch (RepositoryException e) {
-            if (isLoggingError())
-                logError("Cannot add song to album", e);
-            addFormException(new DropletException("Cannot add song to album"));
-
+            if (isLoggingError()) logError(CANNOT_ADD_SONG_TO_ALBUM, e);
+            addFormException(new DropletException(CANNOT_ADD_SONG_TO_ALBUM));
         }
     }
 }

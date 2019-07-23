@@ -12,6 +12,7 @@ import java.util.Map;
 // DAS classes
 import atg.beans.DynamicBeans;
 import atg.beans.PropertyNotFoundException;
+import atg.repository.RepositoryException;
 import atg.repository.RepositoryItem;
 
 /**
@@ -19,66 +20,58 @@ import atg.repository.RepositoryItem;
  */
 public class NewItemAddToProfile extends ActionImpl {
 
+    private static final String PARAM_NEW_SONGS_PLAYLIST_LIMIT = "newSongsPlaylistLimit";
+    private static final String SONGS_REPOSITORY_NAME = "/dynamusic/SongsRepository";
+    private static final String SONG_DESCRIPTOR_NAME = "song";
+    private static final String PROPERTY_NEW_SONGS_PLAYLIST = "newSongsPlaylist";
+    private static final String PROPERTY_SONGS = "songs";
+    private static final String CANNOT_ADD_SONG_TO_PLAYLIST = "Cannot add song to playlist";
+    private static final String TROUBLE_ADDING_SONG_TO_PLAYLIST = "Trouble adding song to playlist";
+
     @Override
     public void initialize(Map pParameters) throws ProcessException {
-        storeOptionalParameter(pParameters, "newSongsPlaylistLimit", Integer.class);
+        storeOptionalParameter(pParameters, PARAM_NEW_SONGS_PLAYLIST_LIMIT, Integer.class);
     }
 
     public void executeAction(ProcessExecutionContext pContext) throws ProcessException {
-        Object newSongsPlaylistLimitObject = getParameterValue("newSongsPlaylistLimit", pContext);
+        Object newSongsPlaylistLimitObject = getParameterValue(PARAM_NEW_SONGS_PLAYLIST_LIMIT, pContext);
         if (newSongsPlaylistLimitObject == null) return; //ATG Start Exception fix
         int newSongsPlaylistLimit = (Integer) newSongsPlaylistLimitObject;
 
-        //1: get a handle to the profile (note this is to be used for a global event,
-        //		but with an *individual* action execution policy)
-        RepositoryItem profile = null;
-        profile = pContext.getSubject();
-
-        // Id of new song item
-        String theId = null;
+        RepositoryItem profile = pContext.getSubject();
+        String theId;
 
         try {
-
-            //2: retrieve id, title, and genre from the new song item
-
+            //retrieve id, title, and genre from the new song item
             NewSongMessage newSongMessage = (NewSongMessage) pContext.getMessage();
             theId = newSongMessage.getSongId();
 
-            //
-            // Chapter 7, Exercise 1 - place code here
-            //
 
+            // get reference to configured repository item
+            RepositoryItem theItem;
+            Repository theRepository;
+            theRepository = (Repository) pContext.resolveName(SONGS_REPOSITORY_NAME);
+            theItem = theRepository.getItem(theId, SONG_DESCRIPTOR_NAME);
 
-            // A) get reference to configured repository item
-            RepositoryItem theItem = null;
-            Repository theRepository = null;
-            theRepository = (Repository) pContext.resolveName("/dynamusic/SongsRepository");
-            theItem = (RepositoryItem) theRepository.getItem(theId, "song");
-            System.out.println("New Item, retrieved from repository, is: " + theItem);
+            RepositoryItem nSP = (RepositoryItem) DynamicBeans.getPropertyValue(profile, PROPERTY_NEW_SONGS_PLAYLIST);
+            Collection<RepositoryItem> theItems = (Collection) DynamicBeans.getPropertyValue(nSP, PROPERTY_SONGS);
 
-            RepositoryItem nSP = (RepositoryItem) DynamicBeans.getPropertyValue(profile, "newSongsPlaylist");
-            Collection theItems = (Collection) DynamicBeans.getPropertyValue(nSP, "songs");
-
-            System.out.println("current items is/are: " + theItems);
-
-            // B) load the new item to the collection
+            // load the new item to the collection
             try {
                 if (theItems.size() < newSongsPlaylistLimit) {
                     theItems.add(theItem);
                 }
-                System.out.println("theItems is now: " + theItems);
-                DynamicBeans.setPropertyValue(nSP, "songs", theItems);
+                DynamicBeans.setPropertyValue(nSP, PROPERTY_SONGS, theItems);
             } catch (Exception e) {
-                System.out.println("Cannot add song to playlist" + e);
+                System.out.println(CANNOT_ADD_SONG_TO_PLAYLIST + e);
             }
 
 
         } catch (PropertyNotFoundException pnfe) {
             throw new ProcessException(pnfe);
-        } catch (atg.repository.RepositoryException e) {
-            System.out.println("Trouble adding song to playlist" + e);
+        } catch (RepositoryException e) {
+            System.out.println(TROUBLE_ADDING_SONG_TO_PLAYLIST + e);
         }
-
 
     }
 }

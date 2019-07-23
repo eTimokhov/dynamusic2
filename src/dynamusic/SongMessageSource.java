@@ -15,8 +15,10 @@ import atg.dms.patchbay.MessageSourceContext;
  * component).
  */
 public class SongMessageSource extends atg.nucleus.GenericService implements MessageSource {
+    private static final String JMS_TYPE_NEW_SONG_MESSAGE = "NewSongMessage";
+    private static final String MESSAGE_SENT_SONG_ID = "fireMessage(): message sent, songId: ";
     private MessageSourceContext mContext;
-    private boolean mStarted = false;
+    private boolean mStarted;
 
     // These methods implement the MessageSource interface
     public void setMessageSourceContext(MessageSourceContext pContext) {
@@ -36,12 +38,11 @@ public class SongMessageSource extends atg.nucleus.GenericService implements Mes
         if (mStarted) {
             ObjectMessage msg = mContext.createObjectMessage();
 
-            /* fire new song message here (Dev 1, chapter 6) */
             NewSongMessage newSongMessage = new NewSongMessage(pSongId, pSongGenre, pTitle);
-            msg.setJMSType("NewSongMessage");
+            msg.setJMSType(JMS_TYPE_NEW_SONG_MESSAGE);
             msg.setObject(newSongMessage);
             mContext.sendMessage(msg);
-            if (isLoggingDebug()) logDebug("fireMessage(): message sent, songId: " + pSongId);
+            if (isLoggingDebug()) logDebug(MESSAGE_SENT_SONG_ID + pSongId);
         }
     }
 }
