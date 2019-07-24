@@ -5,6 +5,7 @@ import javax.jms.ObjectMessage;
 
 import atg.dms.patchbay.MessageSource;
 import atg.dms.patchbay.MessageSourceContext;
+import atg.nucleus.GenericService;
 
 /**
  * This component fires a NewSongMessage event using JMS.
@@ -14,7 +15,7 @@ import atg.dms.patchbay.MessageSourceContext;
  * for the destination of these messages (ultimately they will go to the ScenarioManager
  * component).
  */
-public class SongMessageSource extends atg.nucleus.GenericService implements MessageSource {
+public class SongMessageSource extends GenericService implements MessageSource {
     private static final String JMS_TYPE_NEW_SONG_MESSAGE = "NewSongMessage";
     private static final String MESSAGE_SENT_SONG_ID = "fireMessage(): message sent, songId: ";
     private MessageSourceContext mContext;
